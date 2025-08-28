@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Navbar from "../components/navbar";
 import diseaseIcon from "../app/assets/disease.png";
-import calorie from "../app/assets/calorie.png"
-import aiFitness from "../app/assets/aiFitness.png"
-import clinics from "../app/assets/findClinics.png"
-import mental from "../app/assets/mental.png"
+import calorie from "../app/assets/calorie.png";
+import aiFitness from "../app/assets/aiFitness.png";
+import clinics from "../app/assets/findClinics.png";
+import mental from "../app/assets/mental.png";
+
 export default function Home() {
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -36,15 +37,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Hero Image
-      <div className="max-w-5xl mx-auto px-6 -mt-6">
-        <img
-          src="https://via.placeholder.com/1000x500"
-          alt="Landing"
-          className="rounded-2xl shadow-2xl border border-gray-200"
-        />
-      </div> */}
-
       {/* Services Section */}
       <section className="max-w-7xl mx-auto px-6 py-24">
         <h3 className="text-3xl font-bold text-center mb-16 text-black">
@@ -52,19 +44,20 @@ export default function Home() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Disease Prediction */}
-          <Link href="/diseasePrediction">
-            <div className="group bg-white flex flex-col items-center text-center p-8 shadow-md rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer">
-              <img
-                src={diseaseIcon.src}
-               alt="Disease"
-                className="h-70 mb-6 group-hover:scale-110 transition"
-              />
-              <h4 className="font-semibold text-lg">Disease Prediction</h4>
-              <p className="text-gray-500 text-sm mt-2">
-                Predict diseases using AI-driven health analysis.
-              </p>
-            </div>
-          </Link>
+          <a
+            href="/diseasePrediction/index.html"
+            className="group bg-white flex flex-col items-center text-center p-8 shadow-md rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer"
+          >
+            <img
+              src={diseaseIcon.src}
+              alt="Disease"
+              className="h-70 mb-6 group-hover:scale-110 transition"
+            />
+            <h4 className="font-semibold text-lg">Disease Prediction</h4>
+            <p className="text-gray-500 text-sm mt-2">
+              Predict diseases using AI-driven health analysis.
+            </p>
+          </a>
 
           {/* Nutrition Value */}
           <Link href="/calorieTracker">

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disease Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        textarea, input { width: 100%; padding: 8px; margin: 5px 0; }
+        button { padding: 10px 20px; margin-top: 10px; cursor: pointer; }
+        .card { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Disease Prediction Tool</h2>
+
+    <!-- Step 1: Enter Symptoms -->
+    <div id="step1">
+        <textarea id="problem" rows="4" placeholder="Describe your symptoms..."></textarea>
+        <button onclick="getFollowups()">Next</button>
+    </div>
+
+    <!-- Step 2: Follow-up Questions -->
+    <div id="step2" style="display:none;">
+        <form id="followupForm"></form>
+        <button onclick="getPrediction()">Get Prediction</button>
+    </div>
+
+    <!-- Step 3: Results -->
+    <div id="results" style="display:none;"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

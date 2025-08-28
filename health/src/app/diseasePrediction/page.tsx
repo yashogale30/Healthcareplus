@@ -1,15 +1,17 @@
-import Navbar from "../../components/navbar";
+'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function page() {
+export default function Page() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/diseasePrediction/index.html');
+  }, [router]);
+
   return (
     <div>
-      <Navbar />
-      <div className="p-10">
-        <h1 className="text-3xl font-bold">Disease Prediction</h1>
-        <p className="mt-4 text-gray-600">
-          This page provides insights about disease prediction.
-        </p>
-      </div>
+      <p>Redirecting to Disease Prediction...</p>
     </div>
   );
 }
