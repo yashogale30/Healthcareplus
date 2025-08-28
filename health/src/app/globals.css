@@ -120,3 +120,60 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* map shi below///////////////////////////////////////////////////////////////// */
+
+/* Fullscreen map */
+#map {
+  height: 100vh;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Search container */
+.search-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Input styling */
+.search-container input {
+  color: black;
+  padding: 8px 12px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.search-container input:focus {
+  border-color: #4caf50;
+}
+
+/* Button styling */
+.search-container button {
+  padding: 8px 14px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.search-container button:hover {
+  background: #43a047;
+}
