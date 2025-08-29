@@ -82,7 +82,7 @@ export default function Home() {
           </Link>
 
           {/* AI Fitness */}
-          <Link href="/fitnessTrainer/tracker">
+          <Link href="/fitnessTrainer">
             <div className="group bg-white flex flex-col items-center text-center p-8 shadow-md rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer">
               <img
                 src={aiFitness.src}
