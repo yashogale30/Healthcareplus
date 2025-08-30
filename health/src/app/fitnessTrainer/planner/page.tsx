@@ -80,7 +80,7 @@ export default function Page2() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <main className="min-h-screen bg-gradient-to-br from-blue-400 to-blue-100">
       <Navbar />
 
       <motion.div
@@ -91,7 +91,7 @@ export default function Page2() {
       >
         {/* HEADER */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+          <h1 className="text-4xl font-extrabold text-gray-900">
             AI Fitness & Diet Planner
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -105,7 +105,7 @@ export default function Page2() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
-          <Card className="bg-white/80 backdrop-blur-sm border border-gray-100 shadow-xl rounded-2xl">
+          <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-md rounded-2xl">
             <CardHeader>
               <CardTitle className="text-gray-800">Your Information</CardTitle>
             </CardHeader>
@@ -190,7 +190,7 @@ export default function Page2() {
                 <Button
                   onClick={generatePlan}
                   disabled={loading}
-                  className="px-8 py-3 text-lg font-semibold text-white rounded-xl shadow-md bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition"
+                  className="px-8 py-3 text-lg font-semibold text-white rounded-xl shadow-md bg-blue-600 hover:bg-blue-700 transition"
                 >
                   {loading ? "Generating..." : "Generate My Plan"}
                 </Button>
@@ -208,7 +208,7 @@ export default function Page2() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="space-y-8"
           >
-            <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border border-gray-200 shadow-lg rounded-2xl">
+            <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-md rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-gray-800">🏋️ Workout Plan</CardTitle>
               </CardHeader>
@@ -228,7 +228,7 @@ export default function Page2() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-teal-50 border border-gray-200 shadow-lg rounded-2xl">
+            <Card className="bg-white/80 backdrop-blur-sm border border-gray-200 shadow-md rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-gray-800">🥗 Diet Plan</CardTitle>
               </CardHeader>
@@ -251,7 +251,7 @@ export default function Page2() {
             <div className="text-center">
               <Button
                 onClick={implementPlan}
-                className="px-8 py-3 text-lg font-semibold text-white rounded-xl shadow-md bg-gradient-to-r from-green-500 to-teal-600 hover:opacity-90 transition"
+                className="px-8 py-3 text-lg font-semibold text-white rounded-xl shadow-md bg-green-600 hover:bg-green-700 transition"
               >
                 Implement My Plan
               </Button>
