@@ -44,9 +44,9 @@ export default function Home() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Disease Prediction */}
-          <a
-            href="/diseasePrediction/index.html"
-            className="group bg-white flex flex-col items-center text-center p-8 shadow-md rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer"
+          
+          <Link href="/diseasePrediciton">
+          <div className="group bg-white flex flex-col items-center text-center p-8 shadow-md rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer"
           >
             <img
               src={diseaseIcon.src}
@@ -57,7 +57,8 @@ export default function Home() {
             <p className="text-gray-500 text-sm mt-2">
               Predict diseases using AI-driven health analysis.
             </p>
-          </a>
+          </div>
+          </Link>
 
           {/* Nutrition Value */}
           <Link href="/calorieTracker">
