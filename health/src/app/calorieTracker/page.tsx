@@ -1,8 +1,9 @@
 "use client";
 
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ import
+import { motion, AnimatePresence } from "framer-motion";
 
 type Item = {
   name: string;
@@ -18,7 +19,7 @@ type ApiResponse = {
   notes: string;
 };
 
-export default function Home() {
+export default function CalorieTracker() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -68,150 +69,224 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-200 to-orange-100">
+    <div className="bg-[#F4F2F3] min-h-screen">
       <Navbar />
 
-      <div className="max-w-2xl mx-auto p-6 pt-24 space-y-6">
-        <motion.div
-          className="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-8"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-3xl font-bold text-gray-900 text-center">
-            Image Calorie Tracker
-          </h1>
-          <p className="text-center text-gray-700 mt-2">
-            Upload your food photo and get instant nutrition insights.
-          </p>
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-[#94A7AE]/20 to-[#64766A]/20 rounded-full blur-3xl"></div>
+        </div>
 
-          {/* File Input */}
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={(e) => {
-                const f = e.target.files?.[0] || null;
-                setFile(f);
-                setData(null);
-                setError(null);
-                if (f) setPreview(URL.createObjectURL(f));
-                else setPreview(null);
-              }}
-              className="block text-sm text-gray-600 file:mr-4 file:py-2 file:px-4
-                         file:rounded-full file:border-0
-                         file:text-sm file:font-semibold
-                         file:bg-purple-500 file:text-white
-                         hover:file:bg-purple-600"
-            />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="mb-6 inline-flex items-center px-4 py-2 bg-white/70 backdrop-blur-sm border border-[#C0A9BD]/30 rounded-full text-sm text-[#64766A]">
+            <span className="w-2 h-2 bg-[#94A7AE] rounded-full mr-2 animate-pulse"></span>
+            AI-Powered Nutrition Analysis
           </div>
+          
+          <h1 className="text-5xl md:text-6xl font-light tracking-tight text-[#64766A] mb-6">
+            Calorie <span className="text-[#C0A9BD]">Tracker</span>
+          </h1>
+          
+          <p className="text-xl text-[#64766A]/80 max-w-2xl mx-auto leading-relaxed font-light">
+            Upload your food photo and get instant nutrition insights powered by advanced AI technology.
+          </p>
+        </div>
+      </section>
 
-          {/* Preview */}
-          <AnimatePresence>
-            {preview && (
-              <motion.div
-                key="preview"
-                className="mt-4 flex flex-col items-center gap-3"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }}
-              >
-                <img
-                  src={preview}
-                  alt="preview"
-                  className="rounded-xl shadow-md max-h-80 mx-auto"
-                />
+      {/* Main Content */}
+      <section className="pb-20 px-6">
+        <div className="max-w-2xl mx-auto">
+          <motion.div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl border border-[#C0A9BD]/20 shadow-xl p-8"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Upload Section */}
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-semibold text-[#64766A] mb-4">Upload Food Image</h2>
+              <p className="text-[#64766A]/70 mb-6">
+                Take a photo or upload an image of your meal for instant nutritional analysis.
+              </p>
 
-                {/* Analyze Button */}
-                <button
-                  onClick={analyze}
-                  disabled={!file || loading}
-                  className="mt-4 px-6 py-2 rounded-lg bg-purple-600 text-white font-medium shadow-md
-                             hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              {/* File Input */}
+              <div className="flex flex-col items-center gap-4">
+                <label className="relative cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0] || null;
+                      setFile(f);
+                      setData(null);
+                      setError(null);
+                      if (f) setPreview(URL.createObjectURL(f));
+                      else setPreview(null);
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+                    Choose Image
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            {/* Preview Section */}
+            <AnimatePresence>
+              {preview && (
+                <motion.div
+                  key="preview"
+                  className="mb-8"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4 }}
                 >
-                  {loading ? "Analyzing…" : "Analyze Image"}
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className="bg-white/60 rounded-2xl p-6 border border-[#C0A9BD]/20">
+                    <img
+                      src={preview}
+                      alt="Food preview"
+                      className="rounded-xl shadow-md max-h-80 mx-auto mb-6"
+                    />
 
-          {/* Error */}
-          <AnimatePresence>
-            {error && (
-              <motion.p
-                key="error"
-                className="text-red-600 mt-4 text-center font-medium"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-              >
-                ❌ {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
-
-          {/* Results */}
-          <AnimatePresence>
-            {data && (
-              <motion.section
-                key="results"
-                className="space-y-4 mt-6"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 30 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h2 className="text-lg font-semibold text-gray-900">Results</h2>
-                {data.items?.length ? (
-                  <ul className="space-y-4">
-                    {data.items.map((item, i) => (
-                      <motion.li
-                        key={i}
-                        className="bg-white/80 backdrop-blur-md rounded-xl shadow-md p-4 hover:shadow-lg transition"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
+                    <div className="text-center">
+                      <button
+                        onClick={analyze}
+                        disabled={!file || loading}
+                        className="px-8 py-4 bg-[#C0A9BD] text-white rounded-full text-lg font-medium hover:bg-[#C0A9BD]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                       >
-                        <p className="font-semibold text-gray-900">{item.name}</p>
-                        <p className="text-gray-700">
-                          Estimated portion: {item.estimated_portion_g} g
-                        </p>
-                        <p className="text-gray-900 font-medium">
-                          ≈ {Math.round(item.calories_kcal)} kcal
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Protein: {item.protein_g} g · Carbs: {item.carbs_g} g · Fat:{" "}
-                          {item.fat_g} g
-                        </p>
+                        {loading ? (
+                          <span className="flex items-center gap-2">
+                            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Analyzing...
+                          </span>
+                        ) : (
+                          "Analyze Nutrition"
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-                        <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-                          {[100, 150, 200].map((g) => (
-                            <div
-                              key={g}
-                              className="border border-purple-300 bg-white/60 rounded-lg p-2"
-                            >
-                              <p className="text-xs text-gray-500">{g} g</p>
-                              <p className="font-medium text-gray-900">
-                                {Math.round(scaledCalories(item, g))} kcal
-                              </p>
+            {/* Error Message */}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  key="error"
+                  className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <p className="text-red-600 font-medium">⚠️ {error}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Results Section */}
+            <AnimatePresence>
+              {data && (
+                <motion.div
+                  key="results"
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-semibold text-[#64766A] mb-2">Nutrition Analysis</h3>
+                    <p className="text-[#64766A]/70">Here's what we found in your food image</p>
+                  </div>
+
+                  {data.items?.length ? (
+                    <div className="space-y-6">
+                      {data.items.map((item, i) => (
+                        <motion.div
+                          key={i}
+                          className="bg-white/70 backdrop-blur-sm rounded-2xl border border-[#C0A9BD]/20 p-6 hover:shadow-lg transition-all duration-300"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.1 }}
+                        >
+                          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <div>
+                              <h4 className="text-xl font-semibold text-[#64766A] mb-1">{item.name}</h4>
+                              <p className="text-[#64766A]/70">Estimated portion: {item.estimated_portion_g}g</p>
                             </div>
-                          ))}
-                        </div>
-                      </motion.li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-700">No items detected.</p>
-                )}
-                <p className="text-xs text-gray-500">Notes: {data.notes}</p>
-              </motion.section>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    </main>
+                            <div className="mt-2 md:mt-0 text-right">
+                              <p className="text-2xl font-bold text-[#C0A9BD]">{Math.round(item.calories_kcal)} kcal</p>
+                            </div>
+                          </div>
+
+                          {/* Nutrition Facts */}
+                          <div className="grid grid-cols-3 gap-4 mb-6">
+                            <div className="text-center p-3 bg-gradient-to-br from-[#C0A9BD]/10 to-[#94A7AE]/10 rounded-xl">
+                              <p className="text-sm text-[#64766A]/60 mb-1">Protein</p>
+                              <p className="text-lg font-semibold text-[#64766A]">{item.protein_g}g</p>
+                            </div>
+                            <div className="text-center p-3 bg-gradient-to-br from-[#94A7AE]/10 to-[#64766A]/10 rounded-xl">
+                              <p className="text-sm text-[#64766A]/60 mb-1">Carbs</p>
+                              <p className="text-lg font-semibold text-[#64766A]">{item.carbs_g}g</p>
+                            </div>
+                            <div className="text-center p-3 bg-gradient-to-br from-[#64766A]/10 to-[#C0A9BD]/10 rounded-xl">
+                              <p className="text-sm text-[#64766A]/60 mb-1">Fat</p>
+                              <p className="text-lg font-semibold text-[#64766A]">{item.fat_g}g</p>
+                            </div>
+                          </div>
+
+                          {/* Portion Calculator */}
+                          <div className="border-t border-[#C0A9BD]/20 pt-4">
+                            <p className="text-sm font-medium text-[#64766A] mb-3">Calories for different portions:</p>
+                            <div className="grid grid-cols-3 gap-3">
+                              {[100, 150, 200].map((g) => (
+                                <div
+                                  key={g}
+                                  className="text-center p-3 bg-white/60 border border-[#C0A9BD]/20 rounded-xl"
+                                >
+                                  <p className="text-xs text-[#64766A]/60 mb-1">{g}g</p>
+                                  <p className="font-semibold text-[#64766A]">
+                                    {Math.round(scaledCalories(item, g))} kcal
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center p-8 bg-white/60 rounded-2xl border border-[#C0A9BD]/20">
+                      <p className="text-[#64766A]/70">No food items detected in the image. Please try another image.</p>
+                    </div>
+                  )}
+
+                  {data.notes && (
+                    <div className="mt-6 p-4 bg-[#94A7AE]/10 border border-[#94A7AE]/20 rounded-2xl">
+                      <p className="text-sm text-[#64766A]/70">
+                        <span className="font-medium">Note:</span> {data.notes}
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
   );
 }
