@@ -5,7 +5,7 @@ export default function page() {
     <div>
       <Navbar />
       <div className="p-10">
-        <h1 className="text-3xl font-bold">tracker</h1>
+        <h1 className="text-3xl font-bold">track</h1>
         <p className="mt-4 text-gray-600">
         </p>
       </div>
