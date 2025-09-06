@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useAuth } from "../../lib/authContext";
 import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/ui/loader";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface EmergencyContact {
   name: string;
@@ -85,7 +87,7 @@ export default function ProfilePage() {
               medical_id: "",
               emergency_contacts: [],
               updated_at: new Date().toISOString(),
-            }], { onConflict: "id"})
+            }], { onConflict: "id" })
             .select()
             .single();
 
@@ -107,7 +109,7 @@ export default function ProfilePage() {
         setMedicalId(profileData.medical_id ?? "");
         setEmergencyContacts(profileData.emergency_contacts ?? []);
 
-        //latest mental health score
+        // Latest mental health score
         const { data: mhData, error: mhError } = await supabase
           .from("mental_health_logs")
           .select("score, category")
@@ -146,7 +148,7 @@ export default function ProfilePage() {
     if (!user) return;
     if (!validateProfile()) return;
     setSaving(true);
-    try{
+    try {
       const { data, error } = await supabase
         .from("profiles")
         .upsert([{
@@ -159,7 +161,7 @@ export default function ProfilePage() {
           medical_id: medicalId,
           emergency_contacts: emergencyContacts,
           updated_at: new Date().toISOString(),
-        }], { onConflict: "id"})
+        }], { onConflict: "id" })
         .select()
         .single();
 
@@ -206,235 +208,328 @@ export default function ProfilePage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const getMentalHealthColor = (category: string) => {
+    switch (category.toLowerCase()) {
+      case "severe":
+        return "from-red-500 to-red-600";
+      case "moderately severe":
+        return "from-orange-500 to-red-500";
+      case "moderate":
+        return "from-yellow-500 to-orange-500";
+      case "mild":
+        return "from-blue-400 to-blue-500";
+      default:
+        return "from-green-400 to-green-500";
+    }
+  };
+
   if (!user) return null;
   if (loading || !profile) return <Loader />;
 
   return (
-    <div>
+    <div className="bg-[#F4F2F3] min-h-screen">
       <Navbar />
-      <div className="max-w-md mx-auto mt-24 bg-white p-6 rounded-lg shadow">
-        <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
 
-        {/* Full Name */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Full Name *</label>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            placeholder="eg. Tom Cruise"
-          />
-          {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
+      {/* Hero Section */}
+      <section className="pt-32 pb-12 px-6 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-[#94A7AE]/20 to-[#64766A]/20 rounded-full blur-3xl"></div>
         </div>
 
-        {/* Date of Birth */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Date of Birth *</label>
-          <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
-            max={new Date().toISOString().split("T")[0]}
-            className="w-full border rounded px-3 py-2"
-          />
-          {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="mb-6 inline-flex items-center px-4 py-2 bg-white/70 backdrop-blur-sm border border-[#C0A9BD]/30 rounded-full text-sm text-[#64766A]">
+            <span className="w-2 h-2 bg-[#94A7AE] rounded-full mr-2 animate-pulse"></span>
+            Personal Health Profile
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-light tracking-tight text-[#64766A] mb-6">
+            Your <span className="text-[#C0A9BD]">Profile</span>
+          </h1>
+          
+          <p className="text-xl text-[#64766A]/80 max-w-2xl mx-auto leading-relaxed font-light">
+            Manage your personal information and health data to get the most personalized healthcare experience.
+          </p>
         </div>
+      </section>
 
-        {/* Age display */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Age</label>
-          <input
-            type="text"
-            value={dob ? `${getAge(dob)} years` : ""}
-            readOnly
-            className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
-          />
-        </div>
-
-        {/* Gender */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Gender *</label>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+      {/* Main Content */}
+      <section className="pb-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl border border-[#C0A9BD]/20 shadow-xl p-8"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-        </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Personal Information */}
+              <div className="space-y-6">
+                <div className="text-center lg:text-left mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto lg:mx-0 mb-4">
+                    <div className="w-8 h-8 bg-gradient-to-br from-[#C0A9BD] to-[#94A7AE] rounded-xl"></div>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Personal Information</h2>
+                  <p className="text-[#64766A]/70">Basic details and contact information</p>
+                </div>
 
-        {/* Blood Group */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Blood Group</label>
-          <input
-            type="text"
-            value={bloodGroup}
-            onChange={(e) => setBloodGroup(e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            placeholder="A+, A-, B+, B-, AB+, AB-, O+ or O-"
-          />
-        </div>
+                {/* Full Name */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Full Name *</label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                    placeholder="e.g. John Doe"
+                  />
+                  {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
+                </div>
 
-        {/* Phone */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Phone *</label>
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="e.g. +91 9999999999"
-            pattern="^\+?[0-9]{7,15}$"
-            title="Enter a valid phone number"
-            className="w-full border rounded px-3 py-2"
-          />
-          {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-        </div>
+                {/* Date of Birth */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Date of Birth *</label>
+                  <input
+                    type="date"
+                    value={dob}
+                    onChange={(e) => setDob(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                  />
+                  {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
+                </div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Email</label>
-          <input
-            type="email"
-            value={user.email}
-            readOnly
-            className="w-full border rounded px-3 py-2 bg-gray-100 cursor-not-allowed"
-          />
-        </div>
+                {/* Age Display */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Age</label>
+                  <input
+                    type="text"
+                    value={dob ? `${getAge(dob)} years` : ""}
+                    readOnly
+                    className="w-full p-3 bg-[#94A7AE]/10 border border-[#C0A9BD]/20 rounded-xl text-[#64766A]/70 cursor-not-allowed"
+                  />
+                </div>
 
-        {/* Medical ID */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Medical ID</label>
-          <input
-            type="text"
-            value={medicalId}
-            onChange={(e) => setMedicalId(e.target.value)}
-            placeholder="Enter your medical ID"
-            pattern="^[A-Za-z0-9-]+$"
-            title="Only letters, numbers, and hyphens are allowed"
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
+                {/* Gender */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Gender *</label>
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
+                </div>
 
-        {/* Mental Health Score */}
-        <div className="mb-4 p-3 bg-yellow-100 rounded">
-          {latestScore !== null ? (
-            <p>
-              Latest mental health score: <strong>{latestScore}</strong> ({latestCategory})
-            </p>
-          ) : (
-            <div>
-              <p>
-                You haven't taken a mental health test yet.{' '}
-              </p>
-              <p>
-                <Link
-                  href="/mentalHealth"
-                  className="text-blue-600 underline hover:text-blue-800"
-                >
-                  You can take it here
-                </Link>
-                .
+                {/* Phone */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Phone *</label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="e.g. +91 9999999999"
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                  />
+                  {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                </div>
+
+                {/* Email */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Email</label>
+                  <input
+                    type="email"
+                    value={user.email}
+                    readOnly
+                    className="w-full p-3 bg-[#94A7AE]/10 border border-[#C0A9BD]/20 rounded-xl text-[#64766A]/70 cursor-not-allowed"
+                  />
+                </div>
+              </div>
+
+              {/* Medical Information */}
+              <div className="space-y-6">
+                <div className="text-center lg:text-left mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#94A7AE]/20 to-[#64766A]/20 rounded-2xl flex items-center justify-center mx-auto lg:mx-0 mb-4">
+                    <div className="w-8 h-8 bg-gradient-to-br from-[#94A7AE] to-[#64766A] rounded-xl"></div>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Medical Information</h2>
+                  <p className="text-[#64766A]/70">Health-related details and emergency contacts</p>
+                </div>
+
+                {/* Blood Group */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Blood Group</label>
+                  <input
+                    type="text"
+                    value={bloodGroup}
+                    onChange={(e) => setBloodGroup(e.target.value)}
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                    placeholder="A+, A-, B+, B-, AB+, AB-, O+, O-"
+                  />
+                </div>
+
+                {/* Medical ID */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Medical ID</label>
+                  <input
+                    type="text"
+                    value={medicalId}
+                    onChange={(e) => setMedicalId(e.target.value)}
+                    placeholder="Enter your medical ID"
+                    className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                  />
+                </div>
+
+                {/* Mental Health Score */}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-[#64766A]">Mental Health Status</label>
+                  {latestScore !== null ? (
+                    <div className={`bg-gradient-to-r ${getMentalHealthColor(latestCategory)} rounded-xl p-4 text-white`}>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm opacity-90">Latest Assessment</p>
+                          <p className="text-lg font-semibold">Score: {latestScore} ({latestCategory})</p>
+                        </div>
+                        <Link href="/mentalHealth" className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm transition-all">
+                          Retake
+                        </Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                      <p className="text-[#64766A] mb-2">You haven't taken a mental health assessment yet.</p>
+                      <Link
+                        href="/mentalHealth"
+                        className="inline-block px-4 py-2 bg-gradient-to-r from-[#64766A] to-[#64766A]/90 text-white rounded-lg hover:from-[#64766A]/90 hover:to-[#64766A]/80 transition-all text-sm"
+                      >
+                        Take Assessment
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Emergency Contacts */}
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-[#64766A]">Emergency Contacts</label>
+                  
+                  <AnimatePresence>
+                    {emergencyContacts.map((contact, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="bg-white/60 border border-[#C0A9BD]/30 rounded-xl p-4 space-y-3"
+                      >
+                        <div className="flex justify-between items-center">
+                          <h4 className="font-medium text-[#64766A]">Contact {index + 1}</h4>
+                          <button
+                            onClick={() => {
+                              setEmergencyContacts(emergencyContacts.filter((_, i) => i !== index));
+                            }}
+                            className="w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center transition-all"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <input
+                            type="text"
+                            placeholder="Name"
+                            value={contact.name}
+                            onChange={(e) => {
+                              const updated = [...emergencyContacts];
+                              updated[index].name = e.target.value;
+                              setEmergencyContacts(updated);
+                            }}
+                            className="w-full p-2 bg-white/60 border border-[#C0A9BD]/20 rounded-lg text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-1 focus:ring-[#C0A9BD]/40 transition-all"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Phone"
+                            value={contact.phone}
+                            onChange={(e) => {
+                              const updated = [...emergencyContacts];
+                              updated[index].phone = e.target.value;
+                              setEmergencyContacts(updated);
+                            }}
+                            className="w-full p-2 bg-white/60 border border-[#C0A9BD]/20 rounded-lg text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-1 focus:ring-[#C0A9BD]/40 transition-all"
+                          />
+                          <input
+                            type="email"
+                            placeholder="Email (optional)"
+                            value={contact.email ?? ""}
+                            onChange={(e) => {
+                              const updated = [...emergencyContacts];
+                              updated[index].email = e.target.value;
+                              setEmergencyContacts(updated);
+                            }}
+                            className="w-full p-2 bg-white/60 border border-[#C0A9BD]/20 rounded-lg text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-1 focus:ring-[#C0A9BD]/40 transition-all"
+                          />
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+
+                  <button
+                    onClick={() =>
+                      setEmergencyContacts([...emergencyContacts, { name: "", phone: "", email: "" }])
+                    }
+                    className="w-full p-3 border-2 border-dashed border-[#C0A9BD]/40 rounded-xl text-[#C0A9BD] hover:bg-[#C0A9BD]/5 hover:border-[#C0A9BD]/60 transition-all flex items-center justify-center gap-2"
+                  >
+                    <span className="text-lg">+</span>
+                    Add Emergency Contact
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Last Updated */}
+            <div className="mt-8 pt-6 border-t border-[#C0A9BD]/20">
+              <p className="text-sm text-[#64766A]/60 text-center">
+                Last updated: {profile.updated_at ? new Date(profile.updated_at).toLocaleString() : "Never"}
               </p>
             </div>
-          )}
-        </div>
 
-        {/* Emergency Contacts */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Emergency Contacts</label>
-
-          {emergencyContacts.map((contact, index) => (
-            <div key={index} className="flex items-center gap-2 mb-2">
-              <input
-                type="text"
-                placeholder="Name"
-                value={contact.name}
-                onChange={(e) => {
-                  const updated = [...emergencyContacts];
-                  updated[index].name = e.target.value;
-                  setEmergencyContacts(updated);
-                }}
-                className="border rounded px-2 py-1 w-1/3"
-              />
-              <input
-                type="text"
-                placeholder="Phone"
-                value={contact.phone}
-                onChange={(e) => {
-                  const updated = [...emergencyContacts];
-                  updated[index].phone = e.target.value;
-                  setEmergencyContacts(updated);
-                }}
-                className="border rounded px-2 py-1 w-1/3"
-              />
-              <input
-                type="email"
-                placeholder="Email (optional)"
-                value={contact.email ?? ""}
-                onChange={(e) => {
-                  const updated = [...emergencyContacts];
-                  updated[index].email = e.target.value;
-                  setEmergencyContacts(updated);
-                }}
-                className="border rounded px-2 py-1 w-1/3"
-              />
-
-              {/* Remove button */}
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <button
-                type="button"
-                onClick={() => {
-                  setEmergencyContacts(emergencyContacts.filter((_, i) => i !== index));
-                }}
-                className="px-2 py-1 bg-red-500 text-white rounded"
+                onClick={handleUpdate}
+                disabled={saving}
+                className="px-8 py-4 bg-gradient-to-r from-[#64766A] to-[#64766A]/90 text-white rounded-full text-lg font-medium hover:from-[#64766A]/90 hover:to-[#64766A]/80 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                ✕
+                {saving ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Saving...
+                  </span>
+                ) : (
+                  "Save Profile"
+                )}
+              </button>
+
+              <button
+                onClick={handleReset}
+                disabled={saving}
+                className="px-8 py-4 bg-white/70 backdrop-blur-sm text-[#64766A] rounded-full text-lg font-medium hover:bg-white/90 transition-all duration-300 border border-[#C0A9BD]/30"
+              >
+                Reset Changes
               </button>
             </div>
-          ))}
-
-          {/* Add button */}
-          <button
-            type="button"
-            onClick={() =>
-              setEmergencyContacts([...emergencyContacts, { name: "", phone: "", email: "" }])
-            }
-            className="px-3 py-1 bg-green-500 text-white rounded"
-          >
-            + Add Contact
-          </button>
+          </motion.div>
         </div>
+      </section>
 
-        {/* Last updated */}
-        <p className="text-sm text-gray-500 mb-4">
-          Last updated: {profile.updated_at ? new Date(profile.updated_at).toLocaleString() : "Never"}
-        </p>
-
-        {/* Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={handleUpdate}
-            disabled={saving}
-            className={`px-4 py-2 rounded text-white transition ${
-              saving ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {saving ? "Saving..." : "Save Profile"}
-          </button>
-
-          <button
-            onClick={handleReset}
-            disabled={saving}
-            className="px-4 py-2 rounded text-white bg-gray-500 hover:bg-gray-600 transition"
-          >
-            Reset
-          </button>
-        </div>
-      </div>
+      <Footer />
     </div>
   );
 }

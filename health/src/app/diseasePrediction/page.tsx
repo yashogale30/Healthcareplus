@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import Navbar from "@/components/navbar"; // Make sure this import is correct
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Answers = Record<string, string>;
 type Followup = string | { question: string };
@@ -52,172 +54,251 @@ export default function DiseasePredictionPage() {
     setLoading(false);
   };
 
+  const resetPrediction = () => {
+    setStep(1);
+    setProblem("");
+    setFollowups([]);
+    setAnswers({});
+    setResults(null);
+  };
+
   return (
-    <div>
+    <div className="bg-[#F4F2F3] min-h-screen">
       <Navbar />
-      <div className="disease-bg" style={{ paddingTop: "85px" }}>
-        <div className="card-main">
-          <h2 className="title">🩺 Disease Prediction Tool</h2>
-          <p className="subtitle">AI-powered symptom checker</p>
-          {step === 1 && (
-            <div className="fadein">
-              <label className="input-label" htmlFor="problem">Describe your symptoms:</label>
-              <textarea
-                id="problem"
-                rows={4}
-                placeholder="Describe your symptoms..."
-                value={problem}
-                onChange={handleProblemChange}
-                className="text-input"
-              />
-              <button className="primary-btn" onClick={getFollowups} disabled={loading}>
-                {loading ? "Please wait..." : "Next"}
-              </button>
-            </div>
-          )}
-          {step === 2 && (
-            <form className="fadein" onSubmit={getPrediction}>
-              {followups.map((question, i) => (
-                <div key={i} className="form-group">
-                  <label className="input-label" htmlFor={`ans${i}`}>
-                    {typeof question === "string" ? question : question.question ?? ""}
-                  </label>
-                  <input
-                    id={`ans${i}`}
-                    name={`ans${i}`}
-                    value={answers[`ans${i}`] || ""}
-                    onChange={(e) => handleAnswerChange(i, e)}
-                    className="text-input"
-                    required
-                  />
-                </div>
-              ))}
-              <button className="primary-btn" type="submit" disabled={loading}>
-                {loading ? "Please wait..." : "Get Prediction"}
-              </button>
-            </form>
-          )}
-          {step === 3 && results && (
-            <div id="results" className="fadein">
-              <div className="card-output"><strong>Possible Conditions:</strong> {results.conditions?.join(", ")}</div>
-              <div className="card-output"><strong>Medicines:</strong> {results.medicines?.join(", ")}</div>
-              <div className="card-output"><strong>Care Tips:</strong> {results.care_tips?.join(", ")}</div>
-              <div className="card-output"><strong>See Doctor If:</strong> {results.see_doctor_if?.join(", ")}</div>
-              <div className="card-output"><strong>Disclaimer:</strong> {results.disclaimer}</div>
-              <button
-                className="secondary-btn"
-                onClick={() => {
-                  setStep(1);
-                  setProblem("");
-                  setFollowups([]);
-                  setAnswers({});
-                  setResults(null);
-                }}>
-                🔄 Do Another Prediction
-              </button>
-            </div>
-          )}
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-6 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-[#94A7AE]/20 to-[#64766A]/20 rounded-full blur-3xl"></div>
         </div>
-        <style>{`
-          .disease-bg {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .card-main {
-            background: #fff;
-            padding: 2.5rem 2rem 2rem 2rem;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            width: 100%;
-            max-width: 700px;
-          }
-          .title {
-            margin-bottom: 0.2em;
-            text-align: center;
-          }
-          .subtitle {
-            text-align: center;
-            margin-bottom: 1.7em;
-            color: #555a;
-            font-size: 1.02em;
-            letter-spacing: 0.01em;
-          }
-          .text-input {
-            width: 100%;
-            padding: 9px 12px;
-            margin: 6px 0 16px 0;
-            font-size: 1rem;
-            border: 1.3px solid #cfe1ee;
-            border-radius: 7px;
-            background: #f7fbfc;
-            color: #222;
-            transition: border 0.2s;
-          }
-          .text-input:focus {
-            outline: none;
-            border-color: #5fc6ff;
-          }
-          .input-label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: #374151;
-          }
-          .form-group {
-            margin-bottom: 1.1rem;
-          }
-          .primary-btn, .secondary-btn {
-            padding: 10px 24px;
-            border-radius: 7px;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-          }
-          .primary-btn {
-            background: linear-gradient(90deg, #36d1c4, #5fc6ff);
-            color: white;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 0.2em;
-            margin-bottom: 0.3em;
-            box-shadow: 0 2px 8px #8fd6ff33;
-            transition: background 0.2s, box-shadow 0.2s;
-          }
-          .primary-btn:disabled {
-            background: #c3cfe255;
-            cursor: not-allowed;
-          }
-          .secondary-btn {
-            background: #f5f7fa;
-            color: #575a63;
-            border: 1.2px solid #cfe1ee;
-            margin-top: 1em;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-            width: 100%;
-            font-weight: 500;
-          }
-          .card-output {
-            background: #f7fbfc;
-            border-left: 5px solid #5fc6ff;
-            margin-bottom: 15px;
-            padding: 12px 16px;
-            border-radius: 6px;
-            font-size: 1.07em;
-          }
-          .fadein {
-            animation: fadein 0.45s;
-          }
-          @keyframes fadein {
-            from { opacity: 0; transform: translateY(12px);}
-            to { opacity: 1; transform: translateY(0);}
-          }
-        `}</style>
-      </div>
+
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <div className="mb-6 inline-flex items-center px-4 py-2 bg-white/70 backdrop-blur-sm border border-[#C0A9BD]/30 rounded-full text-sm text-[#64766A]">
+            <span className="w-2 h-2 bg-[#94A7AE] rounded-full mr-2 animate-pulse"></span>
+            AI-Powered Health Assessment
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-light tracking-tight text-[#64766A] mb-6">
+            Disease <span className="text-[#C0A9BD]">Prediction</span>
+          </h1>
+          
+          <p className="text-xl text-[#64766A]/80 max-w-2xl mx-auto leading-relaxed font-light">
+            Get personalized health insights based on your symptoms using advanced AI technology.
+          </p>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="pb-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            className="bg-white/80 backdrop-blur-sm rounded-3xl border border-[#C0A9BD]/20 shadow-xl p-8"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Step 1: Initial Symptoms */}
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">🩺</span>
+                    </div>
+                    <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Describe Your Symptoms</h2>
+                    <p className="text-[#64766A]/70">Tell us about how you're feeling and what symptoms you're experiencing.</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <label className="block text-sm font-medium text-[#64766A]" htmlFor="problem">
+                      What symptoms are you experiencing?
+                    </label>
+                    <textarea
+                      id="problem"
+                      rows={5}
+                      placeholder="Please describe your symptoms in detail (e.g., headache, fever, nausea, etc.)"
+                      value={problem}
+                      onChange={handleProblemChange}
+                      className="w-full p-4 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all resize-none"
+                    />
+                  </div>
+
+                  <button
+                    onClick={getFollowups}
+                    disabled={loading || !problem.trim()}
+                    className="w-full px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Analyzing...
+                      </span>
+                    ) : (
+                      "Continue to Assessment"
+                    )}
+                  </button>
+                </motion.div>
+              )}
+
+              {/* Step 2: Follow-up Questions */}
+              {step === 2 && (
+                <motion.form
+                  key="step2"
+                  onSubmit={getPrediction}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#94A7AE]/20 to-[#64766A]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">❓</span>
+                    </div>
+                    <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Additional Questions</h2>
+                    <p className="text-[#64766A]/70">Please answer these questions to help us provide better insights.</p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {followups.map((question, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className="space-y-2"
+                      >
+                        <label className="block text-sm font-medium text-[#64766A]" htmlFor={`ans${i}`}>
+                          {typeof question === "string" ? question : question.question ?? ""}
+                        </label>
+                        <input
+                          id={`ans${i}`}
+                          name={`ans${i}`}
+                          value={answers[`ans${i}`] || ""}
+                          onChange={(e) => handleAnswerChange(i, e)}
+                          className="w-full p-3 bg-white/60 border border-[#C0A9BD]/30 rounded-xl text-[#64766A] placeholder-[#64766A]/50 focus:outline-none focus:ring-2 focus:ring-[#C0A9BD]/50 focus:border-transparent transition-all"
+                          required
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full px-8 py-4 bg-[#C0A9BD] text-white rounded-full text-lg font-medium hover:bg-[#C0A9BD]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    {loading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Getting Prediction...
+                      </span>
+                    ) : (
+                      "Get Health Assessment"
+                    )}
+                  </button>
+                </motion.form>
+              )}
+
+              {/* Step 3: Results */}
+              {step === 3 && results && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#64766A]/20 to-[#C0A9BD]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <span className="text-2xl">📋</span>
+                    </div>
+                    <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Health Assessment Results</h2>
+                    <p className="text-[#64766A]/70">Based on your symptoms, here's what our AI analysis suggests:</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {results.conditions && (
+                      <div className="bg-gradient-to-br from-[#C0A9BD]/10 to-[#94A7AE]/10 border border-[#C0A9BD]/20 rounded-2xl p-6">
+                        <h3 className="text-lg font-semibold text-[#64766A] mb-3 flex items-center gap-2">
+                          <span className="text-xl">🔍</span>
+                          Possible Conditions
+                        </h3>
+                        <p className="text-[#64766A]/80">{results.conditions.join(", ")}</p>
+                      </div>
+                    )}
+
+                    {results.medicines && (
+                      <div className="bg-gradient-to-br from-[#94A7AE]/10 to-[#64766A]/10 border border-[#94A7AE]/20 rounded-2xl p-6">
+                        <h3 className="text-lg font-semibold text-[#64766A] mb-3 flex items-center gap-2">
+                          <span className="text-xl">💊</span>
+                          Suggested Medicines
+                        </h3>
+                        <p className="text-[#64766A]/80">{results.medicines.join(", ")}</p>
+                      </div>
+                    )}
+
+                    {results.care_tips && (
+                      <div className="bg-gradient-to-br from-[#64766A]/10 to-[#C0A9BD]/10 border border-[#64766A]/20 rounded-2xl p-6">
+                        <h3 className="text-lg font-semibold text-[#64766A] mb-3 flex items-center gap-2">
+                          <span className="text-xl">💡</span>
+                          Care Tips
+                        </h3>
+                        <p className="text-[#64766A]/80">{results.care_tips.join(", ")}</p>
+                      </div>
+                    )}
+
+                    {results.see_doctor_if && (
+                      <div className="bg-gradient-to-br from-red-50 to-orange-50 border border-red-200 rounded-2xl p-6">
+                        <h3 className="text-lg font-semibold text-red-700 mb-3 flex items-center gap-2">
+                          <span className="text-xl">⚠️</span>
+                          See Doctor If
+                        </h3>
+                        <p className="text-red-600">{results.see_doctor_if.join(", ")}</p>
+                      </div>
+                    )}
+
+                    {results.disclaimer && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-6">
+                        <h3 className="text-lg font-semibold text-yellow-700 mb-3 flex items-center gap-2">
+                          <span className="text-xl">⚖️</span>
+                          Important Disclaimer
+                        </h3>
+                        <p className="text-yellow-700 text-sm">{results.disclaimer}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={resetPrediction}
+                    className="w-full px-8 py-4 bg-white/70 backdrop-blur-sm text-[#64766A] rounded-full text-lg font-medium hover:bg-white/90 transition-all duration-300 border border-[#C0A9BD]/30"
+                  >
+                    🔄 Start New Assessment
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }
