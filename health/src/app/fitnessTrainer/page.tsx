@@ -79,7 +79,7 @@ export default function FitnessTrainerHome() {
                       </div>
                     </div>
                     
-                    <Link href="/fitnessTrainer">
+                    <Link href="/fitnessTrainer/planner">
                       <button className="w-full px-8 py-5 bg-gradient-to-r from-[#64766A] to-[#64766A]/90 text-white rounded-2xl text-lg font-medium hover:from-[#64766A]/90 hover:to-[#64766A]/80 transition-all duration-300 hover:scale-105 hover:shadow-2xl transform">
                         Start Planning
                       </button>
@@ -129,7 +129,7 @@ export default function FitnessTrainerHome() {
                       </div>
                     </div>
                     
-                    <Link href="/fitnessTracker">
+                    <Link href="/fitnessTrainer/tracker">
                       <button className="w-full px-8 py-5 bg-gradient-to-r from-[#C0A9BD] to-[#C0A9BD]/90 text-white rounded-2xl text-lg font-medium hover:from-[#C0A9BD]/90 hover:to-[#C0A9BD]/80 transition-all duration-300 hover:scale-105 hover:shadow-2xl transform">
                         Monitor Progress
                       </button>
