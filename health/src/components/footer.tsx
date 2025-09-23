@@ -17,7 +17,7 @@ export default function Footer() {
             <ul className="space-y-2 text-white/70">
               <li><Link href="/diseasePrediction" className="hover:text-white transition">Disease Prediction</Link></li>
               <li><Link href="/calorieTracker" className="hover:text-white transition">Nutrition Tracking</Link></li>
-              <li><Link href="/fitnessTrainer" className="hover:text-white transition">AI Fitness Coach</Link></li>
+              <li><Link href="/fitnessTrainer" className="hover:text-white transition">Fitness Studio</Link></li>
               <li><Link href="/findClinics" className="hover:text-white transition">Find Clinics</Link></li>
               <li><Link href="/mentalHealth" className="hover:text-white transition">Mental Wellness</Link></li>
             </ul>

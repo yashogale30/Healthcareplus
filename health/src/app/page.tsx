@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Navbar from "../components/navbar";
 import diseaseIcon from "../app/assets/disease.png";
@@ -6,9 +7,10 @@ import aiFitness from "../app/assets/aiFitness.png"
 import clinics from "../app/assets/findClinics.png"
 import mental from "../app/assets/mental.png"
 import Footer from "../components/footer";
-
+import { useAuth } from "../lib/authContext";
 
 export default function Home() {
+  const { user, signInWithGoogle, signOut } = useAuth();
   return (
     <div className="bg-[#F4F2F3] min-h-screen">
       {/* Navbar */}
@@ -40,12 +42,25 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-            <Link
-              href="/get-started"
-              className="px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              Get Started
-            </Link>
+            <div className="hidden lg:flex items-center space-x-4">
+              {!user ? (
+                <button
+                  onClick={signInWithGoogle}
+                  className="px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Get Started
+                </button>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Link
+                    href="/profile"
+                    className="px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+            </div>
             <Link
               href="/learn-more"
               className="px-8 py-4 bg-white/70 backdrop-blur-sm text-[#64766A] rounded-full text-lg font-medium hover:bg-white/90 transition-all duration-300 border border-[#C0A9BD]/30"
@@ -138,7 +153,7 @@ export default function Home() {
                       className="w-12 h-12"
                     />
                   </div>
-                  <h3 className="text-xl font-semibold text-[#64766A] mb-3">AI Fitness Coach</h3>
+                  <h3 className="text-xl font-semibold text-[#64766A] mb-3">Fitness Studio</h3>
                   <p className="text-[#64766A]/70 leading-relaxed">
                     Personalized workout plans that adapt to your progress, preferences, and fitness goals.
                   </p>
@@ -196,15 +211,29 @@ export default function Home() {
           <p className="text-xl text-[#64766A]/70 mb-12 font-light max-w-2xl mx-auto">
             Join thousands of users who are already experiencing the future of healthcare with our AI-powered platform.
           </p>
-          <Link
-            href="/get-started"
-            className="inline-flex items-center px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
-          >
-            Start Your Journey
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
+          <div className="hidden lg:flex items-center justify-center space-x-4">
+            {!user ? (
+              <button
+                onClick={signInWithGoogle}
+                className="inline-flex items-center px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Start Your Journey
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+            ) : (
+              <Link
+                href="/profile"
+                className="inline-flex items-center px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Start Your Journey
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            )}
+          </div>
         </div>
       </section>
       <Footer />

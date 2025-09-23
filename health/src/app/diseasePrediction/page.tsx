@@ -77,7 +77,7 @@ export default function DiseasePredictionPage() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="mb-6 inline-flex items-center px-4 py-2 bg-white/70 backdrop-blur-sm border border-[#C0A9BD]/30 rounded-full text-sm text-[#64766A]">
             <span className="w-2 h-2 bg-[#94A7AE] rounded-full mr-2 animate-pulse"></span>
-            AI-Powered Health Assessment
+            Health Assessment
           </div>
           
           <h1 className="text-5xl md:text-6xl font-light tracking-tight text-[#64766A] mb-6">
@@ -111,9 +111,9 @@ export default function DiseasePredictionPage() {
                   className="space-y-6"
                 >
                   <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    {/* <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                       <span className="text-2xl">🩺</span>
-                    </div>
+                    </div> */}
                     <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Describe Your Symptoms</h2>
                     <p className="text-[#64766A]/70">Tell us about how you're feeling and what symptoms you're experiencing.</p>
                   </div>
