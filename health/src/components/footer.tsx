@@ -20,6 +20,7 @@ export default function Footer() {
               <li><Link href="/fitnessTrainer" className="hover:text-white transition">Fitness Studio</Link></li>
               <li><Link href="/findClinics" className="hover:text-white transition">Find Clinics</Link></li>
               <li><Link href="/mentalHealth" className="hover:text-white transition">Mental Wellness</Link></li>
+              <li><Link href="/period_tracker" className="hover:text-white transition">Period Calender</Link></li>
             </ul>
           </div>
           

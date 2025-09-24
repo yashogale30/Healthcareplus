@@ -1,0 +1,90 @@
+/* Update the existing styles for better visibility */
+.calendarContainer {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  max-width: 32rem;
+  margin: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #333; /* Make title black */
+}
+
+.daysOfWeek {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  cursor: pointer;
+  color: #333; /* Make day numbers black */
+}
+
+/* Styles for selected dates */
+.periodDay {
+  background-color: #f87171;
+  color: white;
+}
+
+.ovulationDay {
+  background-color: #60a5fa;
+  color: white;
+}
+
+.markedDay {
+  border: 2px solid #a855f7;
+}
+
+/* New style for the save button */
+.saveButton {
+  background-color: #8b5cf6; /* A shade of purple */
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: none;
+  display: block;
+  margin: 1rem auto;
+}
+
+.disabledDay {
+  color: #ccc; /* Faint grey text color */
+  cursor: not-allowed; /* Change cursor to "not allowed" */
+  background-color: #f7f7f7; /* Lighter background */
+  border: 1px solid #e0e0e0;
+}
+
+.predictedPeriodDay {
+  background-color: #ff99c8; /* A lighter pink for prediction */
+  color: white;
+  opacity: 0.8;
+}
