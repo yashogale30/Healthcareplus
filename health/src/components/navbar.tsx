@@ -44,17 +44,24 @@ export default function Navbar() {
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C0A9BD] to-[#94A7AE] group-hover:w-full transition-all duration-300"></span>
           </Link>
           <Link
-            href="/findClinics"
-            className="hover:text-[#C0A9BD] transition-all duration-300 relative group"
-          >
-            Find Clinics
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C0A9BD] to-[#94A7AE] group-hover:w-full transition-all duration-300"></span>
-          </Link>
-          <Link
             href="/mentalHealth"
             className="hover:text-[#C0A9BD] transition-all duration-300 relative group"
           >
             Mental Wellness
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C0A9BD] to-[#94A7AE] group-hover:w-full transition-all duration-300"></span>
+          </Link>
+          <Link
+            href="/medicine"
+            className="hover:text-[#C0A9BD] transition-all duration-300 relative group"
+          >
+            Medicine
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C0A9BD] to-[#94A7AE] group-hover:w-full transition-all duration-300"></span>
+          </Link>
+          <Link
+            href="/period_tracker"
+            className="hover:text-[#C0A9BD] transition-all duration-300 relative group"
+          >
+            Period Calender
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-[#C0A9BD] to-[#94A7AE] group-hover:w-full transition-all duration-300"></span>
           </Link>
         </nav>

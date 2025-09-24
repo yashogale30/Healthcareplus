@@ -6,6 +6,8 @@ import calorie from "../app/assets/calorie.png"
 import aiFitness from "../app/assets/aiFitness.png"
 import clinics from "../app/assets/findClinics.png"
 import mental from "../app/assets/mental.png"
+import period from "../app/assets/period.png"
+
 import Footer from "../components/footer";
 import { useAuth } from "../lib/authContext";
 
@@ -214,6 +216,25 @@ export default function Home() {
                   <h3 className="text-xl font-semibold text-[#64766A] mb-3">Mental Wellness</h3>
                   <p className="text-[#64766A]/70 leading-relaxed">
                     Monitor, track, and improve your mental health with AI-guided wellness programs.
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Period Tracker */}
+            <Link href="/period_tracker">
+              <div className="group bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-[#C0A9BD]/20 hover:border-[#C0A9BD]/40 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer md:col-span-2 lg:col-span-1">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-20 h-20 bg-gradient-to-br from-[#94A7AE]/20 to-[#64766A]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <img
+                      src={period.src}
+                      alt="Period Calender"
+                      className="w-12 h-12"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold text-[#64766A] mb-3">Period Calender</h3>
+                  <p className="text-[#64766A]/70 leading-relaxed">
+                   Track your Period cycles
                   </p>
                 </div>
               </div>
