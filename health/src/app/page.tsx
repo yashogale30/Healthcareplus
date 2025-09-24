@@ -7,6 +7,7 @@ import aiFitness from "../app/assets/aiFitness.png"
 import clinics from "../app/assets/findClinics.png"
 import mental from "../app/assets/mental.png"
 import period from "../app/assets/period.png"
+import medicine from "../app/assets/medicine.png"
 
 import Footer from "../components/footer";
 import { useAuth } from "../lib/authContext";
@@ -140,7 +141,7 @@ export default function Home() {
                   <div className="w-20 h-20 bg-gradient-to-br from-[#94A7AE]/20 to-[#64766A]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="-5.0 -10.0 110.0 135.0">
  <path d="m86.301 43.801h-0.39844c-0.89844-5.3984-3.3984-10.102-7.3008-13.801-3.6992-3.3984-7.6992-5.6016-11.699-6.3008-5.8984-1-8.6016 0.5-11.102 1.8008-1.3984 0.69922-2.6016 1.3984-4.3984 1.6016 0.10156-7.1992 2.1992-9.3984 5.6992-10.699 0.80078-0.30078 1.1992-1.1016 0.89844-1.8984-0.30078-0.80078-1.1016-1.1992-1.8984-0.89844-5.3984 2-7.6016 5.8984-7.6992 13.5-1.8008-0.19922-3-0.89844-4.3984-1.6016-2.3984-1.3008-5.1992-2.8008-11.102-1.8008-4 0.69922-8 2.8984-11.699 6.3008-1 0.89844-1.8984 1.8984-2.6992 3h-5c-4.6055-0.003906-8.5039 3.8945-8.5039 8.6953v13.102c0 4.8008 3.8984 8.6992 8.6992 8.6992h3.1016c3.3984 8.3008 9.1992 15.801 16.199 19.898 5.8984 3.5 11.898 3.8984 17 1.3008 2.1992 1.1992 4.6016 1.6992 7 1.6992 6.6992 0 13.898-4.3008 20-12.199h9.3008c4.8008 0 8.6992-3.8984 8.6992-8.6992v-13c0-4.8008-3.8984-8.6992-8.6992-8.6992zm-62.801-11.602c3.1992-3 6.6992-4.8984 10.102-5.5 4.8008-0.89844 6.8008 0.19922 9.1016 1.3984 1.5 0.80078 3.1992 1.6992 5.8008 2l-0.003906 9.9023c-1.8008-0.10156-3.5-0.5-5.1992-1.1016v-2.8984c0-1.6016-1.3008-2.8984-2.8984-2.8984h-17.703c0.19922-0.40234 0.5-0.60156 0.80078-0.90234zm-15.5 9.5c0-2.8984 2.1992-5.3008 5-5.6992v4c0 0.80078 0.69922 1.5 1.5 1.5s1.5-0.60156 1.5-1.5v-4h6.1016v2.8984c0 0.80078 0.69922 1.5 1.5 1.5 0.80078 0 1.5-0.69922 1.5-1.5v-2.8984h6.1016l-0.003906 4c0 0.80078 0.69922 1.5 1.5 1.5s1.5-0.69922 1.5-1.5v-4h6.1016l0.10156 10.199h-26.703c-2.1992 0-4.1992 0.80078-5.6992 2.1016zm5.6992 18.902c-3.0977 0-5.6992-2.6016-5.6992-5.8008s2.6016-5.6992 5.6992-5.6992c0 3.8008 0.69922 7.6992 2 11.5zm37.102 21.199c-0.5-0.30078-1.1016-0.30078-1.5 0-5.5 3.3008-11 1.3008-14.699-0.80078-9.8984-5.8008-17.602-19.801-17.801-31.801h23.602c1.6016 0 2.8984-1.3008 2.8984-2.8984v-4.1016c2.1992 0.69922 4.3008 1 6.6992 1 4.8008 0 8.1992-1.3008 11.699-3.1992 0.69922-0.39844 1-1.3008 0.60156-2-0.39844-0.69922-1.3008-1-2-0.60156-2.8008 1.5-5.3984 2.5-8.8008 2.8008v-9.8984c2.5-0.30078 4.3008-1.1992 5.8008-2 2.3008-1.1992 4.3008-2.3008 9.1016-1.3984 3.3984 0.60156 6.8984 2.5 10.102 5.5 6.5 6 8.3984 15.5 5.3008 26l-38.105-0.003906c-1.6016 0-2.8984 1.3008-2.8984 2.8984v10.199c0 1.6016 1.3008 2.8984 2.8984 2.8984h29.5c-5.8984 6.707-14.598 12.004-22.398 7.4062zm41.199-16.199c0 3.1992-2.6016 5.6992-5.6992 5.6992l-42.5 0.10156-0.10156-10.199h6.1992v2.8984c0 0.80078 0.69922 1.5 1.5 1.5 0.80078 0 1.5-0.69922 1.5-1.5v-2.8984l6.1016-0.003906v4c0 0.80078 0.69922 1.5 1.5 1.5s1.5-0.69922 1.5-1.5v-4h6.1016v2.8984c0 0.80078 0.69922 1.5 1.5 1.5 0.80078 0 1.5-0.69922 1.5-1.5v-2.8984h6.1016v4c0 0.80078 0.69922 1.5 1.5 1.5s1.5-0.69922 1.5-1.5v-4h6.1016c2.1992 0 4.1992-0.80078 5.6992-2.1016zm-5.6992-7.4023h-1.3008c1.1016-4 1.5-7.8008 1.1992-11.5h0.10156c3.1992 0 5.6992 2.6016 5.6992 5.6992 0 3.1016-2.6016 5.8008-5.6992 5.8008z"/>
-<text x="0.0" y="117.5" font-size="5.0" font-weight="bold" font-family="Arbeit Regular, Helvetica, Arial-Unicode, Arial, Sans-serif" fill="#000000"></text><text x="0.0" y="122.5" font-size="5.0" font-weight="bold" font-family="Arbeit Regular, Helvetica, Arial-Unicode, Arial, Sans-serif" fill="#000000"></text></svg>
+<text x="0.0" y="117.5" fontSize="5.0" fontWeight="bold" font-family="Arbeit Regular, Helvetica, Arial-Unicode, Arial, Sans-serif" fill="#000000"></text><text x="0.0" y="122.5" font-size="5.0" font-weight="bold" font-family="Arbeit Regular, Helvetica, Arial-Unicode, Arial, Sans-serif" fill="#000000"></text></svg>
                   </div>
                   <h3 className="text-xl font-semibold text-[#64766A] mb-3">Nutrition Insights</h3>
                   <p className="text-[#64766A]/70 leading-relaxed">
@@ -161,7 +162,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-semibold text-[#64766A] mb-3">Fitness Studio</h3>
                   <p className="text-[#64766A]/70 leading-relaxed">
-                    Personalized workout plans that adapt to your progress, preferences, and fitness goals.
+                    Personalized workout plans that intelligently adapt to your progress, preferences, and fitness goals
                   </p>
                 </div>
               </div>
@@ -234,11 +235,34 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-semibold text-[#64766A] mb-3">Period Calender</h3>
                   <p className="text-[#64766A]/70 leading-relaxed">
-                   Track your Period cycles
+                   Track your period cycles with predictions and comprehensive health monitoring
                   </p>
                 </div>
               </div>
             </Link>
+
+            {/* Medicine Tracker */}
+            {/* Medicine Tracker - Centered in bottom row */}
+<div className="md:col-span-2 lg:col-span-3 flex justify-center">
+  <Link href="/medicine" className="w-full max-w-md">
+    <div className="group bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-[#C0A9BD]/20 hover:border-[#C0A9BD]/40 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer">
+      <div className="flex flex-col items-center text-center">
+        <div className="w-20 h-20 bg-gradient-to-br from-[#94A7AE]/20 to-[#64766A]/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <img
+            src={medicine.src}
+            alt="medicine"
+            className="w-12 h-12"
+          />
+        </div>
+        <h3 className="text-xl font-semibold text-[#64766A] mb-3">Medicine Tracker</h3>
+        <p className="text-[#64766A]/70 leading-relaxed">
+         Never miss a dose, stay on track with ease.
+        </p>
+      </div>
+    </div>
+  </Link>
+</div>
+
           </div>
         </div>
       </section>
