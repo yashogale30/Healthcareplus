@@ -1,15 +1,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabaseClient';
 
 export async function POST(req: Request) {
+  const body = await req.json();
+  const userId = body.userId;
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing GEMINI_API_KEY" }, { status: 500 });
     }
-
-    const data = await req.json();
-    const { name, age, gender, weightKg, heightCm, activityLevel, goal,oi, dietPreference } = data;
+    const { name, age, gender, weightKg, heightCm, activityLevel, goal,oi, dietPreference } = body;
 
     if (!name || !age || !goal) {
       return NextResponse.json(
@@ -57,9 +58,19 @@ export async function POST(req: Request) {
       const cleanedText = outputText.replace(/```json|```/g, '').trim();
       structuredOutput = JSON.parse(cleanedText);
 
-      if (!structuredOutput.workoutPlan || !structuredOutput.dietPlan) {
+      if(!structuredOutput.workoutPlan || !structuredOutput.dietPlan) {
         throw new Error("Incomplete plan structure");
       }
+
+      if(userId) {
+        await supabase.from('fitness_plans').insert({
+          user_id: userId,
+          profile,
+          workout_plan: structuredOutput.workoutPlan,
+          diet_plan: structuredOutput.dietPlan
+        });
+      }
+      
     } catch (err) {
       console.error("AI JSON parse error:", err);
       return NextResponse.json({ error: "Invalid JSON from AI"}, { status: 500 });

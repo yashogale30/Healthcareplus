@@ -83,7 +83,7 @@ export default function CalorieTracker() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="mb-6 inline-flex items-center px-4 py-2 bg-white/70 backdrop-blur-sm border border-[#C0A9BD]/30 rounded-full text-sm text-[#64766A]">
             <span className="w-2 h-2 bg-[#94A7AE] rounded-full mr-2 animate-pulse"></span>
-            AI-Powered Nutrition Analysis
+            Nutritional Analysis
           </div>
           
           <h1 className="text-5xl md:text-6xl font-light tracking-tight text-[#64766A] mb-6">

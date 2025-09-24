@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from '@/lib/authContext';
 
 export default function FitnessTrainer() {
+  const { user } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
@@ -40,14 +42,14 @@ export default function FitnessTrainer() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, userId: user?.id || null }),
       });
 
       const data = await response.json();
       if (response.ok) {
         setOutput(data.output);
       } else {
-        setErrorMsg(data.error || "❌ Error generating plan.");
+        setErrorMsg(data.error || "Error generating plan.");
       }
     } catch (err) {
       setErrorMsg("Something went wrong.");
@@ -56,15 +58,82 @@ export default function FitnessTrainer() {
     }
   };
 
+  const fetchLatestPlan = async () => {
+    if (!user?.id) return null;
+    
+    try {
+      const response = await fetch(`/api/getLatestPlan?userId=${user.id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.plan;
+      }
+    } catch (error) {
+      console.error("Error fetching latest plan:", error);
+    }
+    return null;
+  };
+
   const implementPlan = async () => {
     if (!output) return;
+    if (!user?.id) {
+      setErrorMsg("You must be logged in to save your plan.");
+      return;
+    }
+    const payload = {
+      user_id: user.id,
+      name: form.name,
+      age: parseInt(form.age),
+      gender: form.gender,
+      weight_kg: parseFloat(form.weightKg),
+      height_cm: parseFloat(form.heightCm),
+      activity_level: form.activityLevel,
+      goal: form.goal,
+      oi: form.oi || '',
+      diet_preference: form.dietPreference,
+      workout_plan: output.workoutPlan || [],
+      diet_plan: output.dietPlan || []
+    };
+
+    console.log('Saving plan payload: ', payload);
     try {
       const res = await fetch("/api/savePlan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(output),
+        body: JSON.stringify(payload),
       });
-      if (res.ok) router.push("/page1");
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        const latestPlan = await fetchLatestPlan();
+        if (latestPlan) {
+          console.log("Latest plan fetched:", latestPlan);
+          setOutput({
+            workoutPlan: latestPlan.workout_plan || [],
+            dietPlan: latestPlan.diet_plan || []
+          });
+          setForm({
+            name: latestPlan.name || "",
+            age: latestPlan.age?.toString() || "",
+            gender: latestPlan.gender || "",
+            weightKg: latestPlan.weight_kg?.toString() || "",
+            heightCm: latestPlan.height_cm?.toString() || "",
+            activityLevel: latestPlan.activity_level || "",
+            goal: latestPlan.goal || "",
+            oi: latestPlan.oi || "",
+            dietPreference: latestPlan.diet_preference || "",
+          });
+          router.push("/fitnessTrainer/tracker");
+        } else {
+          router.push("/fitnessTrainer/tracker");
+        }
+      } else {
+        setErrorMsg(data.error || "Failed to save plan.");
+      }
     } catch {
       setErrorMsg("Something went wrong while saving.");
     }
@@ -85,6 +154,29 @@ export default function FitnessTrainer() {
     setOutput(null);
     setErrorMsg("");
   };
+
+  useEffect(() => {
+    const loadExistingPlan = async () => {
+      if (user?.id) {
+        const latestPlan = await fetchLatestPlan();
+        if (latestPlan) {
+          setForm({
+            name: latestPlan.name || "",
+            age: latestPlan.age?.toString() || "",
+            gender: latestPlan.gender || "",
+            weightKg: latestPlan.weight_kg?.toString() || "",
+            heightCm: latestPlan.height_cm?.toString() || "",
+            activityLevel: latestPlan.activity_level || "",
+            goal: latestPlan.goal || "",
+            oi: latestPlan.oi || "",
+            dietPreference: latestPlan.diet_preference || "",
+          });
+        }
+      }
+    };
+
+    loadExistingPlan();
+  }, [user?.id]);
 
   return (
     <div className="bg-[#F4F2F3] min-h-screen">
@@ -125,9 +217,9 @@ export default function FitnessTrainer() {
             transition={{ duration: 0.5 }}
           >
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              {/* <div className="w-16 h-16 bg-gradient-to-br from-[#C0A9BD]/20 to-[#94A7AE]/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">💪</span>
-              </div>
+              </div> */}
               <h2 className="text-2xl font-semibold text-[#64766A] mb-2">Personal Information</h2>
               <p className="text-[#64766A]/70">Tell us about yourself to create your perfect fitness plan</p>
             </div>

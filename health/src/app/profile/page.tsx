@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Loader from "../../components/ui/loader";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import jsPDF from "jspdf";
 
 interface EmergencyContact {
   name: string;
@@ -221,6 +222,83 @@ export default function ProfilePage() {
       default:
         return "from-green-400 to-green-500";
     }
+  };
+
+  const handleExportPDF = () => {
+    if (!profile) return;
+
+    const doc = new jsPDF();
+    let y = 25;
+    doc.setFont("times", "bold");
+    doc.setFontSize(24);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const title = "Personal Health Profile";
+    const textWidth = doc.getTextWidth(title);
+    doc.text(title, (pageWidth - textWidth) / 2, y);
+    y += 15;
+
+    doc.setFont("times", "normal");
+    doc.setFontSize(12);
+
+    const addField = (label: string, value: string) => {
+      doc.setFont("times", "bold");
+      doc.text(`${label}:`, 14, y);
+      doc.setFont("times", "normal");
+      const splitText = doc.splitTextToSize(value, 160);
+      doc.text(splitText, 50, y);
+      y += splitText.length * 7 + 3;
+    };
+
+    addField("Full Name", profile.full_name);
+    addField("Date of Birth", profile.dob);
+    addField("Age", getAge(profile.dob) ? `${getAge(profile.dob)} years` : "");
+    addField("Gender", profile.gender);
+    addField("Blood Group", profile.blood_group);
+    addField("Phone", profile.phone);
+    addField("Email", profile.email);
+    addField("Medical ID", profile.medical_id);
+
+    y += 5;
+    doc.setDrawColor(200);
+    doc.line(14, y, pageWidth - 14, y);
+    y += 10;
+
+    // Emergency Contacts
+    doc.setFont("times", "bold");
+    doc.text("Emergency Contacts", 14, y);
+    y += 8;
+
+    if (profile.emergency_contacts.length === 0) {
+      doc.setFont("times", "normal");
+      doc.text("None", 14, y);
+      y += 8;
+    } else {
+      profile.emergency_contacts.forEach((c, i) => {
+        doc.setFont("times", "bold");
+        doc.text(`Contact ${i + 1}:`, 14, y);
+        doc.setFont("times", "normal");
+        const contactInfo = `Name: ${c.name || "-"} | Phone: ${c.phone || "-"} | Email: ${c.email || "-"}`;
+        const splitText = doc.splitTextToSize(contactInfo, pageWidth - 34);
+        doc.text(splitText, 20, y);
+        y += splitText.length * 7 + 3;
+      });
+    }
+
+    y += 5;
+    doc.setDrawColor(200);
+    doc.line(14, y, pageWidth - 14, y);
+    y += 10;
+
+    // Last updated
+    doc.setFont("times", "italic");
+    doc.setFontSize(10);
+    doc.text(
+      `Last updated: ${profile.updated_at ? new Date(profile.updated_at).toLocaleString() : "Never"}`,
+      14,
+      y
+    );
+
+    doc.save(`${profile.full_name || "profile"}.pdf`);
   };
 
   if (!user) return null;
@@ -488,6 +566,19 @@ export default function ProfilePage() {
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Export to PDF */}
+            <div className="mt-6">
+              <button
+                onClick={handleExportPDF}
+                className="w-full px-8 py-4 bg-gradient-to-r from-[#64766A] to-[#64766A]/90 text-white rounded-full text-lg font-medium hover:from-[#64766A]/90 hover:to-[#64766A]/80 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Export Profile as PDF
+              </button>
             </div>
 
             {/* Last Updated */}
