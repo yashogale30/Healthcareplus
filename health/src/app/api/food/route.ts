@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   try {
     const { imageBase64, mimeType } = await req.json();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // try flash for stricter JSON
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // try flash for stricter JSON
 
     const result = await model.generateContent({
       contents: [
