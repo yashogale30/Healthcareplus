@@ -28,19 +28,6 @@ Modern healthcare is fragmented — users juggle multiple apps for fitness, diet
 
 Healthcare+ integrates multiple AI models and backend services into a cohesive architecture.
 
-**Frontend:**
-
-* Next.js
-* Tailwind CSS
-
-**Backend:**
-
-* Node.js
-* Express.js
-
-**Database:**
-
-* MongoDB
 
 **AI Components:**
 
