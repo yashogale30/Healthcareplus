@@ -6,7 +6,7 @@ Healthcare+ is a multimodal AI-driven health ecosystem that unifies fitness, nut
 
 ---
 
-## 🚀 Features
+## Features
 
 * **Disease Prediction** — Input symptoms to get AI-generated diagnostic insights.
 * **Calorie Tracker** — Upload food images to estimate calories, proteins, carbs, and nutrients using CNN-based image captioning.
@@ -18,13 +18,13 @@ Healthcare+ is a multimodal AI-driven health ecosystem that unifies fitness, nut
 
 ---
 
-## 🧠 Inspiration
+## Inspiration
 
-Modern healthcare is fragmented — users juggle multiple apps for fitness, diet, and medical tracking. Healthcare+ was inspired by the need for a unified, intelligent ecosystem that promotes proactive care instead of reactive treatment. Our vision was to build an AI-powered companion that predicts, guides, and supports users toward holistic well-being.
+Modern healthcare is fragmented users juggle multiple apps for fitness, diet, and medical tracking. Healthcare+ was inspired by the need for a unified, intelligent ecosystem that promotes proactive care instead of reactive treatment. Our vision was to build an AI-powered companion that predicts, guides, and supports users toward holistic well-being.
 
 ---
 
-## 🧩 Architecture Overview
+## Architecture Overview
 
 Healthcare+ integrates multiple AI models and backend services into a cohesive architecture.
 
@@ -39,7 +39,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## ⚙️ How We Built It
+## How We Built It
 
 * Modular architecture to integrate diverse AI services without heavy coupling.
 * RESTful APIs for seamless communication between frontend and backend.
@@ -49,7 +49,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## 🚧 Challenges We Faced
+## Challenges We Faced
 
 * Efficiently integrating multimodal AI models with low latency.
 * Ensuring reliable health predictions with limited labeled data.
@@ -59,7 +59,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## 🏆 Accomplishments We're Proud Of
+## Accomplishments We're Proud Of
 
 * Developed a fully functional prototype of a unified, AI-powered healthcare system.
 * Combined computer vision, NLP, and generative AI in a single platform.
@@ -68,7 +68,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## 📚 What We Learned
+## What We Learned
 
 * Building multimodal AI pipelines handling text, images, and structured data.
 * Using generative AI for contextual, health-specific recommendations.
@@ -77,7 +77,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## 🔮 What's Next for Healthcare+
+## What's Next for Healthcare+
 
 * Speech-to-text capabilities for hands-free operation.
 * Integration with wearable devices for real-time vitals monitoring.
@@ -87,7 +87,7 @@ Healthcare+ integrates multiple AI models and backend services into a cohesive a
 
 ---
 
-## 🧾 Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 
