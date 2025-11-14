@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const { plan, actual } = await req.json();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
         Compare today's actual fitness data with the planned data.

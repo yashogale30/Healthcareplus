@@ -80,6 +80,9 @@ export async function POST(req: Request) {
 
   } catch (err) {
     console.error("Gemini API Error:", err);
-    return NextResponse.json({ error: err || "Unexpected error" }, { status: 500 });
+    return NextResponse.json(
+  { error: (err as any)?.message || String(err) || "Unexpected error" },
+  { status: 500 }
+);
   }
 }
