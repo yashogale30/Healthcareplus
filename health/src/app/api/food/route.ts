@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY1!);
 
 function isValidFoodResponse(data: any) {
   return (
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   try {
     const { imageBase64, mimeType } = await req.json();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }); // try flash for stricter JSON
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // try flash for stricter JSON
 
     const result = await model.generateContent({
       contents: [
