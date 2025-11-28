@@ -112,112 +112,77 @@ async function predictDisease(symptoms, duration) {
 
 // ==================== MEDICINES TRACKER ====================
 async function checkMedicines(supabase, userId, checkInteractions) {
-  // First try the dedicated medicines table
-  const { data: medicinesTable, error: medError } = await supabase
-    .from('medicines')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('active', true);
+  console.log("checkMedicines called (schema: id,name,time,dosage,date,taken,inserted_at) for user:", userId, "checkInteractions:", checkInteractions);
 
-  // If medicines table has data, use it
-  if (!medError && medicinesTable && medicinesTable.length > 0) {
-    const parsedMedicines = medicinesTable.map(m => ({
-      name: m.medicine_name,
-      dosage: m.dosage || 'Not specified',
-      frequency: m.frequency || 'As needed',
-      side_effects: m.side_effects || '',
-      purpose: m.purpose || '',
-      logged_at: m.created_at
-    }));
+  // Normalize DB row -> agent-friendly shape
+  function normalize(rows) {
+    return rows.map(r => {
+      const name = r.name ?? r.medicine_name ?? 'Unknown';
+      const dosage = r.dosage ?? 'Not specified';
+      const frequency = r.time ?? (Array.isArray(r.reminder_times) ? r.reminder_times.join(', ') : 'As needed');
+      const side_effects = r.side_effects ?? r.notes ?? '';
+      const logged_at = r.inserted_at ?? r.updated_at ?? null;
+      return { id: r.id, name, dosage, frequency, side_effects, purpose: r.purpose ?? '', logged_at, _raw: r };
+    });
+  }
 
-    // Check for fatigue-causing side effects
-    const fatigueRisk = parsedMedicines.filter(m => 
-      m.side_effects && (
-        m.side_effects.toLowerCase().includes('fatigue') ||
-        m.side_effects.toLowerCase().includes('drowsiness') ||
-        m.side_effects.toLowerCase().includes('tiredness') ||
-        m.side_effects.toLowerCase().includes('sleepiness') ||
-        m.side_effects.toLowerCase().includes('tired')
-      )
+  function analyze(parsedMedicines) {
+    const fatigueRisk = parsedMedicines.filter(m =>
+      m.side_effects &&
+      (m.side_effects.toLowerCase().includes('fatigue') ||
+       m.side_effects.toLowerCase().includes('drowsiness') ||
+       m.side_effects.toLowerCase().includes('tired') ||
+       m.side_effects.toLowerCase().includes('sleepiness'))
     );
 
-    return {
+    const result = {
       medicines: parsedMedicines,
       total_count: parsedMedicines.length,
       fatigue_causing_meds: fatigueRisk.map(m => m.name),
       side_effects_risk: fatigueRisk.length > 0 ? 'high' : 'low',
-      recommendation: fatigueRisk.length > 0 
-        ? `⚠️ ${fatigueRisk.length} medication(s) may contribute to fatigue: ${fatigueRisk.map(m => m.name).join(', ')}. Consult your doctor about alternatives.`
+      recommendation: fatigueRisk.length > 0
+        ? `⚠️ ${fatigueRisk.length} medication(s) may contribute to fatigue: ${fatigueRisk.map(m => m.name).join(', ')}. Consult your doctor.`
         : '✓ No obvious medication-related fatigue concerns found.'
     };
+
+    if (checkInteractions) {
+      result.interactions_checked = false;
+      result.interaction_warnings = []; // placeholder
+    }
+    return result;
   }
 
-  // Fallback: Try nutrition_logs with correct column structure
-  // nutrition_logs has: id, user_id, items (jsonb), created_at
-  const { data: nutritionLogs, error: nutritionError } = await supabase
-    .from('nutrition_logs')
-    .select('*')
-    .eq('user_id', userId)
-    .limit(20);
+  try {
+    // Primary: retrieve recent rows using columns you DO have
+    const { data, error } = await supabase
+      .from('medicines')
+      .select('*')
+      .order('inserted_at', { ascending: false })
+      .limit(200);
 
-  if (!nutritionError && nutritionLogs && nutritionLogs.length > 0) {
-    // Parse items (jsonb) for medicine-related entries
-    const medicineEntries = [];
-    
-    for (const log of nutritionLogs) {
-      const items = log.items || {};
-      
-      // Check if items contains medicine/medication data
-      const itemsStr = JSON.stringify(items).toLowerCase();
-      if (itemsStr.includes('medicine') || 
-          itemsStr.includes('medication') || 
-          itemsStr.includes('pill') ||
-          itemsStr.includes('tablet')) {
-        
-        medicineEntries.push({
-          name: items.medicine_name || items.name || items.medication || 'Unknown medication',
-          dosage: items.dosage || 'Not specified',
-          frequency: items.frequency || 'As needed',
-          side_effects: items.side_effects || items.notes || '',
-          logged_at: log.created_at
-        });
-      }
+    console.log("checkMedicines fetch result:", { length: data?.length ?? 0, error });
+
+    if (error) {
+      // If error appears, log and continue to final empty result
+      console.warn("checkMedicines fetch error:", error);
+      return { medicines: [], total_count: 0, message: 'Error reading medicines table', error: error.message };
     }
 
-    if (medicineEntries.length > 0) {
-      // Check for fatigue-causing side effects
-      const fatigueRisk = medicineEntries.filter(m => 
-        m.side_effects && (
-          m.side_effects.toLowerCase().includes('fatigue') ||
-          m.side_effects.toLowerCase().includes('drowsiness') ||
-          m.side_effects.toLowerCase().includes('tired')
-        )
-      );
-
-      return {
-        medicines: medicineEntries,
-        total_count: medicineEntries.length,
-        fatigue_causing_meds: fatigueRisk.map(m => m.name),
-        side_effects_risk: fatigueRisk.length > 0 ? 'high' : 'low',
-        message: 'Medications found in nutrition logs. Consider using the dedicated Medicine Tracker.',
-        recommendation: fatigueRisk.length > 0 
-          ? `Some medications may contribute to fatigue. Consult your doctor.`
-          : 'No obvious medication-related fatigue concerns.'
-      };
+    if (!data || data.length === 0) {
+      return { medicines: [], total_count: 0, message: 'No medication data found.' };
     }
+
+    // Optionally filter client-side by userId if you encoded user info in name/time/dosage
+    // (can't server-filter by user because user_id column doesn't exist)
+    const parsed = normalize(data);
+    return analyze(parsed);
+
+  } catch (err) {
+    console.error("checkMedicines unexpected error:", err);
+    return { medicines: [], total_count: 0, message: 'Unexpected error', error: err?.message ?? String(err) };
   }
-
-  // No medicines found anywhere
-  console.log('No medicines found in medicines table or nutrition_logs');
-  
-  return { 
-    medicines: [], 
-    total_count: 0,
-    message: 'No medication data found. Start tracking medicines in the Medicine Tracker.',
-    side_effects_risk: 'none',
-    recommendation: 'Add your medications to get personalized side effect analysis and drug interaction checks.'
-  };
 }
+
 
 
 // ==================== NUTRITION ANALYSIS ====================
