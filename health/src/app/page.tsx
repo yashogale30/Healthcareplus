@@ -65,7 +65,10 @@ export default function Home() {
               )}
             </div>
             <Link
+
               href="/agent"
+
+
               className="px-8 py-4 bg-white/70 backdrop-blur-sm text-[#64766A] rounded-full text-lg font-medium hover:bg-white/90 transition-all duration-300 border border-[#C0A9BD]/30"
             >
               Chat with us!
