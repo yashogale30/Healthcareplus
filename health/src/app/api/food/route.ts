@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY1!);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 function isValidFoodResponse(data: any) {
   return (
