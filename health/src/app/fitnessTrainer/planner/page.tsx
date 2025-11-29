@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from '@/lib/authContext';
+import { useAuth } from "@/lib/authContext";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function FitnessTrainer() {
-  const { user } = useAuth();
+  const { user, profile, reloadProfile } = useAuth();
   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
@@ -34,6 +35,7 @@ export default function FitnessTrainer() {
   };
 
   const generatePlan = async () => {
+    const cost = Math.floor(500 + Math.random() * 500);
     setErrorMsg("");
     setLoading(true);
     setOutput(null);
@@ -50,6 +52,20 @@ export default function FitnessTrainer() {
         setOutput(data.output);
       } else {
         setErrorMsg(data.error || "Error generating plan.");
+      }
+      if (user) {
+        const { data: current } = await supabase
+          .from("profiles")
+          .select("token_score")
+          .eq("id", user.id)
+          .single();
+          
+        const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+        await supabase
+          .from("profiles")
+          .update({ token_score: newScore })
+          .eq("id", user.id);
+        reloadProfile();
       }
     } catch (err) {
       setErrorMsg("Something went wrong.");

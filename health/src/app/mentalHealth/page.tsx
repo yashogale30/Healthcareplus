@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabaseClient";
-import { useAuth } from "../../lib/authContext";
+import { useAuth } from "@/lib/authContext";
+import { supabase } from "@/lib/supabaseClient";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,7 +48,7 @@ const answerOptions = [
 ];
 
 export default function MentalHealthPage() {
-  const { user } = useAuth();
+  const { user, profile, reloadProfile } = useAuth();
   const router = useRouter();
 
   const [phase, setPhase] = useState<1 | 2 | 3>(1);
@@ -143,13 +143,28 @@ export default function MentalHealthPage() {
     }
   };
 
-  const retakeAssessment = () => {
+  async function retakeAssessment() {
+    const cost = Math.floor(500 + Math.random() * 500);
     setLatestScore(null);
     setLatestCategory("");
     setPhase(1);
     setCurrentIndex(0);
     setAnswers([]);
     if (!user) localStorage.removeItem("guestMentalHealthResult");
+    if (user) {
+      const { data: current } = await supabase
+        .from("profiles")
+        .select("token_score")
+        .eq("id", user.id)
+        .single();
+    
+      const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+      await supabase
+        .from("profiles")
+        .update({ token_score: newScore })
+        .eq("id", user.id);
+      reloadProfile();
+    }
   };
 
   const getRecommendation = (category: string) => {

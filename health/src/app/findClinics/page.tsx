@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { motion } from "framer-motion";
+import { useAuth } from "@/lib/authContext";
+import { supabase } from "@/lib/supabaseClient";
 
 type Place = {
   lat: number;
@@ -15,6 +17,7 @@ type Place = {
 };
 
 export default function ClinicMap() {
+  const { user, profile, reloadProfile } = useAuth();
   const mapRef = useRef<any>(null);
   const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,6 +74,7 @@ export default function ClinicMap() {
   }, []);
 
   async function searchPlaces() {
+    const cost = Math.floor(500 + Math.random() * 500);
     if (!searchQuery.trim() || !mapRef.current) return;
 
     setLoading(true);
@@ -113,7 +117,20 @@ export default function ClinicMap() {
           </div>
         `);
     });
-
+    if (user) {
+      const { data: current } = await supabase
+        .from("profiles")
+        .select("token_score")
+        .eq("id", user.id)
+        .single();
+    
+      const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+      await supabase
+        .from("profiles")
+        .update({ token_score: newScore })
+        .eq("id", user.id);
+      reloadProfile();
+    }
     setTopHospitals(data.results);
     setLoading(false);
   }

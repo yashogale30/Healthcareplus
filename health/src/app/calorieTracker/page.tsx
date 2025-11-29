@@ -22,7 +22,7 @@ type ApiResponse = {
 };
 
 export default function CalorieTracker() {
-  const { user } = useAuth();
+  const { user, profile, reloadProfile } = useAuth();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -45,10 +45,26 @@ export default function CalorieTracker() {
 
   async function analyze() {
     if (!file) return;
-    setLoading(true);
-    setError(null);
-    setData(null);
-    try {
+      const cost = Math.floor(500 + Math.random() * 500);
+      setLoading(true);
+      setError(null);
+      setData(null);
+      try {
+        if (user) {
+        const { data: current } = await supabase
+          .from("profiles")
+          .select("token_score")
+          .eq("id", user.id)
+          .single();
+
+        const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+
+        await supabase
+          .from("profiles")
+          .update({ token_score: newScore })
+          .eq("id", user.id);
+        reloadProfile();
+      }
       const imageBase64 = await toBase64(file);
       const res = await fetch("/api/food", {
         method: "POST",

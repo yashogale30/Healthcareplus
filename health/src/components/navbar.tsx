@@ -6,7 +6,7 @@ import { useAuth } from "../lib/authContext";
 import { useState } from "react";
 
 export default function Navbar() {
-  const { user, signInWithGoogle, signOut } = useAuth();
+  const { user, signInWithGoogle, signOut, profile } = useAuth();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -87,6 +87,11 @@ export default function Navbar() {
                 Sign Out
               </button>
             </div>
+          )}
+          {profile && (
+              <span className="px-3 py-1 rounded-full bg-[#C0A9BD]/20 text-[#64766A] ml-4">
+                {profile.token_score} Tokens
+              </span>
           )}
         </div>
 
@@ -183,6 +188,11 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+            {profile && (
+              <span className="px-3 py-1 rounded-full bg-[#C0A9BD]/20 text-[#64766A] ml-4">
+                {profile.token_score} Tokens
+              </span>
+            )}
           </nav>
         </div>
       )}

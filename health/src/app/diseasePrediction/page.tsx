@@ -2,12 +2,15 @@
 import React, { useState } from "react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { useAuth } from "@/lib/authContext";
+import { supabase } from "@/lib/supabaseClient";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Answers = Record<string, string>;
 type Followup = string | { question: string };
 
 export default function DiseasePredictionPage() {
+  const { user, profile, reloadProfile } = useAuth();
   const [problem, setProblem] = useState("");
   const [followups, setFollowups] = useState<Followup[]>([]);
   const [answers, setAnswers] = useState<Answers>({});
@@ -20,11 +23,26 @@ export default function DiseasePredictionPage() {
   };
 
   const getFollowups = async () => {
+    const cost = Math.floor(500 + Math.random() * 500);
     if (!problem.trim()) {
       alert("Please enter your symptoms.");
       return;
     }
     setLoading(true);
+    if (user) {
+      const { data: current } = await supabase
+        .from("profiles")
+        .select("token_score")
+        .eq("id", user.id)
+        .single();
+
+      const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+      await supabase
+        .from("profiles")
+        .update({ token_score: newScore })
+        .eq("id", user.id);
+      reloadProfile();
+    }
     const res = await fetch("/api/followups", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -41,8 +59,23 @@ export default function DiseasePredictionPage() {
   };
 
   const getPrediction = async (e: React.FormEvent) => {
+    const cost = Math.floor(500 + Math.random() * 500);
     e.preventDefault();
     setLoading(true);
+    if (user) {
+      const { data: current } = await supabase
+        .from("profiles")
+        .select("token_score")
+        .eq("id", user.id)
+        .single();
+
+      const newScore = Math.max(0, (current?.token_score || 50000) - cost);
+      await supabase
+        .from("profiles")
+        .update({ token_score: newScore })
+        .eq("id", user.id);
+      reloadProfile();
+    }
     const res = await fetch("/api/prediction", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
