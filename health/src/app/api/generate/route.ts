@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const body = await req.json();
   const userId = body.userId;
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY1;
     if (!apiKey) {
       return NextResponse.json({ error: "Missing GEMINI_API_KEY" }, { status: 500 });
     }
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     `;
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     const result = await model.generateContent(prompt);
     const outputText = result.response.text();
 
@@ -80,6 +80,9 @@ export async function POST(req: Request) {
 
   } catch (err) {
     console.error("Gemini API Error:", err);
-    return NextResponse.json({ error: err || "Unexpected error" }, { status: 500 });
+    return NextResponse.json(
+  { error: (err as any)?.message || String(err) || "Unexpected error" },
+  { status: 500 }
+);
   }
 }
