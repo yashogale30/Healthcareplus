@@ -28,6 +28,7 @@ interface Profile {
   medical_id: string;
   emergency_contacts: EmergencyContact[];
   updated_at?: string;
+  token_score?: number;
 }
 
 export default function ProfilePage() {
@@ -587,6 +588,21 @@ export default function ProfilePage() {
                 Last updated: {profile.updated_at ? new Date(profile.updated_at).toLocaleString() : "Never"}
               </p>
             </div>
+
+            {profile && (
+              <div className="bg-white rounded-2xl p-4 shadow mb-6 border border-gray-200">
+                <h2 className="text-xl font-semibold text-[#64766A]">
+                  Token Score
+                </h2>
+                <p className="text-3xl font-bold text-[#C0A9BD] mt-2">
+                  {profile.token_score}
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Tokens deduct when you run AI tools.
+                </p>
+              </div>
+            )}
+
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
