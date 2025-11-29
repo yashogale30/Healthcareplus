@@ -15,7 +15,7 @@ const routeToServiceTool = {
         properties: {
           service: {
             type: "STRING",
-            enum: ["disease-prediction", "calorie-tracking", "ai-fitness", "mental-health", "period-tracking","clinics-nearby"],
+            enum: ["disease-prediction", "calorie-tracking", "ai-fitness-planner","ai-fitness-tracker-workout-diet", "mental-health", "period-tracking","clinics-nearby"],
             description: "The service to route to"
           },
           reason: {
@@ -33,7 +33,8 @@ const routeToServiceTool = {
 const serviceRoutes: Record<string, string> = {
   "disease-prediction": "/diseasePrediction",
   "calorie-tracking": "/calorieTracker",
-  "ai-fitness": "/fitnessTrainer",
+  "ai-fitness-planner": "/fitnessTrainer/planner",
+ "ai-fitness-tracker-workout-diet": "/fitnessTrainer/tracker",
   "mental-health": "/mentalHealth",
   "period-tracking": "/period_tracker",
   "clinics-nearby": "/findClinics"
@@ -57,7 +58,8 @@ CORE BEHAVIOR:
 AVAILABLE SERVICES:
 - disease-prediction: Symptom checker, disease risk prediction
 - calorie-tracking: Food logging, calorie analysis
-- ai-fitness: Workout planning, fitness tracking
+- ai-fitness-planner: Workout planning and diet planning
+- ai-fitness-tracker-workout-diet: Workout tracking and diet (what to eat), show diet
 - mental-health: Mental wellness, mood tracking, PHQ-9 screening
 - period-tracking: Menstrual cycle tracking and predictions
 
