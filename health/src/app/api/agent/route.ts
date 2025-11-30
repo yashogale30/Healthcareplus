@@ -15,7 +15,7 @@ const routeToServiceTool = {
         properties: {
           service: {
             type: "STRING",
-            enum: ["disease-prediction", "calorie-tracking", "ai-fitness-planner","ai-fitness-tracker-workout-diet", "mental-health", "period-tracking","clinics-nearby"],
+            enum: ["disease-prediction", "calorie-tracking", "ai-fitness-planner","ai-fitness-tracker-workout-diet", "mental-health", "period-tracking","clinics-nearby", "medicine"],
             description: "The service to route to"
           },
           reason: {
@@ -37,7 +37,8 @@ const serviceRoutes: Record<string, string> = {
  "ai-fitness-tracker-workout-diet": "/fitnessTrainer/tracker",
   "mental-health": "/mentalHealth",
   "period-tracking": "/period_tracker",
-  "clinics-nearby": "/findClinics"
+  "clinics-nearby": "/findClinics",
+  "medicine":"/medicine"
 };
 
 // ========== AGENT LOGIC ==========
@@ -62,6 +63,7 @@ AVAILABLE SERVICES:
 - ai-fitness-tracker-workout-diet: Workout tracking and diet (what to eat), show diet
 - mental-health: Mental wellness, mood tracking, PHQ-9 screening
 - period-tracking: Menstrual cycle tracking and predictions
+- medicine: scheduled medicine
 
 DECISION RULES:
 1. Simple questions (What is diabetes? How much water should I drink?) → Answer directly
