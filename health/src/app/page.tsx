@@ -46,7 +46,16 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             <div className="hidden lg:flex items-center space-x-4">
-              <Link href="/chatbotAgent"></Link>
+              
+                <div className="flex items-center space-x-3">
+                  <Link
+                    href="/chatbotAgent"
+                    className="px-8 py-4 bg-[#64766A] text-white rounded-full text-lg font-medium hover:bg-[#64766A]/90 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  >
+                    Agentic AI
+                  </Link>
+                </div>
+              
             </div>
             <Link
 
